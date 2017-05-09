@@ -1,0 +1,9 @@
+#! /bin/bash
+
+# Paolo Lulli 2015-2017
+
+export MACHINES_DB_HOME="$HOME/.machines_db"
+
+cd $(dirname $0)
+
+perl -Ilib ./bin/machineMgr.pl "$@"
