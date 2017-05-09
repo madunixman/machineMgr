@@ -28,10 +28,11 @@ sub process(){
 		$self->{home} .= "/.machines_db";
 	}
 	print "Using home:[$self->{home}]\n";
-	$self->{db}=  $self->{home} . "/account.db";
+	$self->{db}= $self->{home} . "/account.db";
 	my $dbstring=$self->{db};
-	print "Db name: $dbstring\n";
-	my $connection = Database->new('db' => "$dbstring");
+	#print "Db name: $dbstring\n";
+	my $connection = Database->new();
+	$connection->db($dbstring);
 	if ( ! -d  $self->{home} ){
     		$connection->initialize($self->{home});
 	}

@@ -13,14 +13,16 @@ has host 	=> ( is => 'rw', isa => 'Str',);
 has username 	=> ( is => 'rw', isa => 'Str',);
 has password 	=> ( is => 'rw', isa => 'Str',);
 has type 	=> ( is => 'rw', isa => 'Str',);
+has home 	=> ( is => 'rw', isa => 'Str',);
 
 my $cli = CLI->new;
+my $dbs=$ENV{"HOME"}."/.machines_db/account.db";
      
-sub initialize(){
+sub initialize($){
         my $self = shift;
         my $homedir = shift;
     	mkdir($homedir);
-	my $dbh = DBI->connect("dbi:SQLite:dbname=$self->{db}","","");
+	my $dbh = DBI->connect("dbi:SQLite:dbname=$dbs","","");
   	$dbh->do("PRAGMA foreign_keys = ON");
 	my $sql;
 	my $sth;
@@ -44,7 +46,7 @@ sub insert_i(){
      	$self->{username}=$cli->prompt('username');
      	$self->{password}=$cli->prompt('password');
      	$self->{type}=$cli->prompt('type');
-	my $dbh = DBI->connect("dbi:SQLite:dbname=$self->{db}","","");
+	my $dbh = DBI->connect("dbi:SQLite:dbname=$dbs","","");
   	#$dbh->do("PRAGMA foreign_keys = ON");
 	my $sql = "insert into account(id_account, host, username, password, type ) values (?,?,?,?,?) ";
 	my $sth = $dbh->prepare($sql);
@@ -63,7 +65,7 @@ sub update_i($){
         $self->{username}=$cli->prompt('username');
         $self->{password}=$cli->prompt('password');
         $self->{type}=$cli->prompt('type');
-	my $dbh = DBI->connect("dbi:SQLite:dbname=$self->{db}","","");
+	my $dbh = DBI->connect("dbi:SQLite:dbname=$dbs","","");
   	#$dbh->do("PRAGMA foreign_keys = ON");
 	my $sql = "update account set  host=?, username=?, password=?, type=?  where id_account = ? ";
 	my $sth = $dbh->prepare($sql);
@@ -77,7 +79,7 @@ sub update_i($){
 sub get_by_id_account($){
         my $self = shift;
      	my $id_account=$_[0];
-	my $dbh = DBI->connect("dbi:SQLite:dbname=$self->{db}","","");
+	my $dbh = DBI->connect("dbi:SQLite:dbname=$dbs","","");
   	#$dbh->do("PRAGMA foreign_keys = ON");
 
 	my $sql = "select id_account, host, username, password, type from account where id_account = ? ";
@@ -90,7 +92,7 @@ sub get_by_id_account($){
 sub delete_by_id($){
         my $self = shift;
      	my $id_account=$_[0];
-	my $dbh = DBI->connect("dbi:SQLite:dbname=$self->{db}","","");
+	my $dbh = DBI->connect("dbi:SQLite:dbname=$dbs","","");
   	#$dbh->do("PRAGMA foreign_keys = ON");
 	my $sql = "delete from account where id_account = ? ";
 	my $sth = $dbh->prepare($sql);
@@ -101,7 +103,7 @@ sub search_by_field($$){
         my $self = shift;
      	my $field=$_[0];
      	my $value=$_[1];
-	my $dbh = DBI->connect("dbi:SQLite:dbname=$self->{db}","","");
+	my $dbh = DBI->connect("dbi:SQLite:dbname=$dbs","","");
   	$dbh->do("PRAGMA foreign_keys = ON");
 	my $sql = "select id_account, host, username, password, type from account where $field like ? ";
 	my $sth = $dbh->prepare($sql);
@@ -111,9 +113,9 @@ sub search_by_field($$){
 	return $hash;
 }
 
-sub select_all($){
+sub select_all(){
         my $self = shift;
-	my $dbh = DBI->connect("dbi:SQLite:dbname=$self->{db}","","");
+	my $dbh = DBI->connect("dbi:SQLite:dbname=$dbs","","");
   	$dbh->do("PRAGMA foreign_keys = ON");
 	my $sql = "select id_account, host, username, password, type from account";
 	my $sth = $dbh->prepare($sql);
@@ -123,7 +125,7 @@ sub select_all($){
 	return $hash;
 }
 
-sub list($){
+sub list(){
         my $self = shift;
 	my $list = &select_all();
 	my $key;
