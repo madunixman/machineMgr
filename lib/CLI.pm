@@ -15,4 +15,6 @@ sub prompt($){
 	return $self->{value};
 }
 
+# Paolo Lulli 2017
+
 1;

@@ -23,3 +23,5 @@ machineMgr -c 	<id_account>	: connect to <id_account>
 machineMgr -u 	<id_account>	: update <id_account>
 machineMgr -d 	<id_account>	: delete <id_account>
 machineMgr -l 			: list available id_accounts
+
+# Paolo Lulli 2017
